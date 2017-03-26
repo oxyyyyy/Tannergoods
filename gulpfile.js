@@ -1,6 +1,6 @@
 var gulp = require('gulp'),
     sass = require('gulp-sass'),
-    browserSync = require('browser-sync'),
+    browserSync = require('browser-sync').create(),
     concat = require('gulp-concat'),
     uglify = require('gulp-uglifyjs'),
     cssnano = require('gulp-cssnano'),
@@ -11,11 +11,18 @@ var gulp = require('gulp'),
 // npm i gulp-sass browser-sync gulp-concat gulp-uglifyjs gulp-cssnano gulp-rename gulp-concat-css del --save-dev
 
 
+gulp.task('browser-sync', function() {
+  browserSync.init({
+    server: {
+      baseDir: 'src'
+    }
+  });
+});
+
 gulp.task('sass', function() {
   return gulp.src('src/sass/**/*.sass')
   .pipe(sass())
-  .pipe(gulp.dest('src/css'))
-  .pipe(browserSync.reload({stream: true}))
+  .pipe(gulp.dest('src/css'));
 });
 
 gulp.task('scripts', function() {
@@ -25,34 +32,21 @@ gulp.task('scripts', function() {
   .pipe(gulp.dest('src/js'));
 });
 
-gulp.task('concatCssTask', function() {
-  return gulp.src(['src/css/**/*.css','!src/css/bundle.css','!src/css/bundle.min.css','!src/css/bundle.libs.css','!src/css/bundle.libs.min.css'])
-    .pipe(concatCss("bundle.css"))
-    .pipe(gulp.dest('src/css'));
-});
-
 gulp.task('concatCssTaskLibs', function() {
   return gulp.src(['node_modules/bootstrap/dist/css/bootstrap.min.css'])
-    .pipe(concatCss("bundle.libs.css"))
+    .pipe(concatCss('bundle.libs.css'))
     .pipe(gulp.dest('src/css'));
 });
 
-gulp.task('browser-sync', function() {
-  browserSync({
-    server: {
-      baseDir: 'src'
-    }
-  });
-});
-
-gulp.task('minCss', ['sass', 'concatCssTask'], function() {
-  return gulp.src(['src/css/bundle.css'])
+gulp.task('minCss', ['sass'], function() {
+  return gulp.src(['src/css/main.css'])
   .pipe(cssnano())
   .pipe(rename({suffix: '.min'}))
-  .pipe(gulp.dest('src/css'));
+  .pipe(gulp.dest('src/css'))
+  .pipe(browserSync.stream());
 });
 
-gulp.task('minCssLibs', ['sass', 'concatCssTaskLibs'], function() {
+gulp.task('minCssLibs', ['concatCssTaskLibs'], function() {
   return gulp.src(['src/css/bundle.libs.css'])
   .pipe(cssnano())
   .pipe(rename({suffix: '.min'}))
@@ -65,16 +59,16 @@ gulp.task('clean', function() {
 
 // Watch!
 gulp.task('watch', ['browser-sync', 'minCss', 'minCssLibs'], function() {
-  gulp.watch('src/sass/**/*.sass', ['sass']);
+  gulp.watch('src/sass/**/*.sass', ['minCss']);
   gulp.watch('src/*.html', browserSync.reload);
   gulp.watch('src/js/**/*.js', browserSync.reload);
 });
 
 // Bulid!
-gulp.task('build', ['clean', 'sass', 'scripts', 'minCss', 'minCssLibs'], function() {
+gulp.task('build', ['clean', 'scripts', 'minCss', 'minCssLibs'], function() {
 
   var buildCss = gulp.src([
-    'src/css/bundle.min.css',
+    'src/css/main.min.css',
     'src/css/bundle.libs.min.css'
   ])
   .pipe(gulp.dest('dist/css'));
