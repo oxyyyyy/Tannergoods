@@ -33,7 +33,7 @@ gulp.task('scripts', function() {
 });
 
 gulp.task('concatCssTaskLibs', function() {
-  return gulp.src(['node_modules/bootstrap/dist/css/bootstrap.min.css'])
+  return gulp.src(['node_modules/normalize.css/normalize.css'])
     .pipe(concatCss('bundle.libs.css'))
     .pipe(gulp.dest('src/css'));
 });

@@ -1,10 +1,47 @@
 @import url("https://fonts.googleapis.com/css?family=Montserrat|Roboto");
 body {
-  font-family: "Montserrat", sans-serif; }
+  font-family: "Montserrat", sans-serif;
+  margin: 0; }
 
-p.sub_title {
-  font-size: 20px; }
+nav {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  margin: 20px 0; }
+  nav .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 250px; }
+    nav .logo img {
+      width: 50%; }
+  nav .nav_menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 60%;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap; }
+    nav .nav_menu .nav_item {
+      margin: 30px 15px; }
+      nav .nav_menu .nav_item .nav_item_link {
+        text-decoration: none;
+        text-transform: uppercase;
+        color: #000000; }
 
-h1 {
-  font-size: 50px;
-  text-transform: uppercase; }
+header {
+  height: 75vh;
+  background-image: url("../img/Header_photo.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: 200px 0; }
+  header .title {
+    padding-top: 30vh;
+    padding-left: 20%; }
+    header .title p.sub_title {
+      font-size: 20px; }
+    header .title h1 {
+      font-size: 50px;
+      text-transform: uppercase; }
